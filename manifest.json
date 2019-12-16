@@ -1,0 +1,28 @@
+{
+    "author": "Kenneth Lee",
+    "content_scripts": [
+      {
+        "css": [
+          "css/extension.css"
+        ],
+        "js": [
+          "js/extension.js"
+        ]
+      }
+    ],
+    "description": "MyQ adapter add-on for Mozilla WebThings Gateway",
+    "gateway_specific_settings": {
+      "webthings": {
+        "exec": "{nodeLoader} {path}",
+        "primary_type": "adapter",
+        "strict_max_version": "*",
+        "strict_min_version": "0.10.0"
+      }
+    },
+    "homepage_url": "https://github.com/mozilla-iot/example-adapter",
+    "id": "myq-adapter",
+    "manifest_version": 1,
+    "name": "MyQ Adapter",
+    "short_name": "MyQ",
+    "version": "0.0.0"
+  }

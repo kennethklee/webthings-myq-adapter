@@ -1,0 +1,57 @@
+{
+  "name": "myq-adapter",
+  "version": "0.0.0",
+  "description": "MyQ adapter add-on for Mozilla WebThings Gateway",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kennethklee/webthings-myq-adapter.git"
+  },
+  "author": "Kenneth Lee <kennethkl@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/kennethklee/webthings-myq-adapter/issues"
+  },
+  "homepage": "https://github.com/kennethklee/webthings-myq-adapter#readme",
+  "dependencies": {
+    "myq-api": "0.0.2"
+  },
+  "moziot": {
+    "api": {
+      "min": 2,
+      "max": 2
+    },
+    "type": "adapter",
+    "plugin": true,
+    "exec": "{nodeLoader} {path}",
+    "config": {
+      "pollInterval": 5
+    },
+    "schema": {
+      "type": "object",
+      "required": [
+        "pollInterval",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "pollInterval": {
+          "description": "Interval in minutes at which to poll MyQ",
+          "type": "integer",
+          "minimum": 1
+        },
+        "email": {
+          "description": "MyQ account email",
+          "type": "string"
+        },
+        "password": {
+          "description": "MyQ account email",
+          "type": "string",
+          "format": "password"
+        }
+      }
+    }
+  }
+}
