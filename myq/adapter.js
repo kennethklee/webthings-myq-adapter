@@ -1,3 +1,7 @@
+const {
+  Adapter
+} = require('gateway-addon')
+
 let MyQ = require('myq-api')
 let MyQDevice = require('./device')
 
