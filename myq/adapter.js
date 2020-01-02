@@ -12,6 +12,8 @@ class MyQAdapter extends Adapter {
 
     this.myq = new MyQ(config.username, config.password)
     this.pollInterval = config.pollInterval
+
+    addonManager.addAdapter(this)
   }
 
   /**

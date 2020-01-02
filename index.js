@@ -4,9 +4,8 @@ const {Database} = require('gateway-addon')
 
 
 module.exports = async (addonManager) => {
-  let db = Database(manifest.id)
+  let db = new Database(manifest.id)
   let config = await db.open().then(() => db.loadConfig())
 
   new MyQAdapter(addonManager, config, manifest)
-  addonManager.addAdapter(this)
 }
