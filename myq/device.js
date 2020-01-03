@@ -54,9 +54,10 @@ class MyQDevice extends Device {
     let resp = await this.adapter.myq.getDoorState(this.id)
     let newValue = resp.doorState === 1
 
-    if (this.properties.open.value !== newValue) {
-      this.properties.open.set_cached_value(newValue)
-      this.notify_property_changed(this.properties.open)
+    let doorProp = this.properties.get('open')
+    if (doorProp.value !== newValue) {
+      doorProp.setCachedValue(newValue)
+      this.notifyPropertyChanged(doorProp)
     }
   }
 
