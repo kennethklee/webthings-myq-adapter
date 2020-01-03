@@ -1,6 +1,6 @@
 const {
   Device,
-  // Property,
+  Property,
 } = require('gateway-addon')
 
 const PROPERTY_DEFINITIONS = {
@@ -9,7 +9,7 @@ const PROPERTY_DEFINITIONS = {
   //   type: 'boolean',
   //   '@type': 'OnOffProperty',
   // },
-  door: {
+  open: {
     title: 'Door',
     type: 'boolean',
     '@type': 'DoorProperty'
@@ -28,20 +28,24 @@ class MyQDevice extends Device {
     this.id = host.id
     this.name = host.name
     this.type = host.typeName
-    this['@type'] = 'DoorSensor'
-    
-    let doorProperty = new Property(this, 'door', PROPERTY_DEFINITIONS.door)
+    this['@type'] = ['DoorSensor']
+
+    let doorProperty = new Property(this, 'open', PROPERTY_DEFINITIONS.open)
     doorProperty.setCachedValue(host.doorState === 1)
-    this.properties.set('door', doorProperty)
+    this.properties.set('open', doorProperty)
+
+    this.poll()
   }
 
   async notifyPropertyChanged(property) {
-    super.notifyPropertyChanged(property)
-
-    switch (property) {
-      case 'door':
-        return adapter.myq.setDoorState(this.id, property.value ? 2 : 1)
+    switch (property.name) {
+      case 'open':
+        console.log('Setting door state to', property.value ? 1 : 2)
+        await this.adapter.myq.setDoorState(this.id, property.value ? 1 : 2)
+        break
     }
+
+    super.notifyPropertyChanged(property)
   }
 
   async poll() {
@@ -53,7 +57,7 @@ class MyQDevice extends Device {
     if (this.properties.door.value !== newValue) {
       this.properties.door.set_cached_value(newValue)
       this.notify_property_changed(this.properties.door)
-    }    
+    }
   }
 
   async cancelPoll() {

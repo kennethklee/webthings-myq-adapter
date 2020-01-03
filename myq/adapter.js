@@ -11,10 +11,25 @@ class MyQAdapter extends Adapter {
     super(addonManager, manifest.id, manifest.name)
 
     this.myq = new MyQ(config.email, config.password)
-    console.log(config)
     this.pollInterval = config.pollInterval
-
+    
     addonManager.addAdapter(this)
+
+    this.myq.login()
+      .then(result => {
+        if (result.returnCode) {
+          throw new Error(result.message)
+        }
+        return this.myq.getDevices([7, 17])
+      })
+      .then(result => {
+        if (result.returnCode) {
+          throw new Error(result.message)
+        }
+        result.devices.forEach(device => {
+          this.handleDeviceAdded(new MyQDevice(this, device))
+        })
+      })
   }
 
   /**
@@ -24,24 +39,15 @@ class MyQAdapter extends Adapter {
    */
   async startPairing(_timeoutSeconds) {
     console.log('MyQAdapter:', this.name, 'id', this.id, 'pairing started')
-
-    if (!this.myq.securityToken) {
-      let loginResult = await this.myq.login()
-      loginResult.returnCode && console.error(loginResult.message)
+    
+    let result = await this.myq.getDevices([7, 17])
+    if (result.returnCode) {
+      throw new Error(result.message)
     }
 
-    let {devices} = this.myq.getDevices([7, 17]) // Retrieve garage doors
-    devices.forEach(device => {
+    result.devices.forEach(device => {
       this.handleDeviceAdded(new MyQDevice(this, device))
     })
-  }
-
-  /**
-   * Cancel the pairing/discovery process.
-   */
-  cancelPairing() {
-    console.log('MyQAdapter:', this.name, 'id', this.id,
-                'pairing cancelled');
   }
 
   /**
@@ -61,29 +67,6 @@ class MyQAdapter extends Adapter {
     } else {
       console.error('MyQAdapter: device, ', device.id, ', not found.')
     }
-  }
-
-  /**
-   * Cancel unpairing process.
-   *
-   * @param {Object} device Device that is currently being paired
-   */
-  cancelRemoveThing(device) {
-    console.log('MyQAdapter:', this.name, 'id', this.id,
-                'cancelRemoveThing(', device.id, ')');
-  }
-
-  /**
-   * Gateway saves device (or loads device)
-   * 
-   * @param {string} deviceId - ID of the device
-   * @param {object} device - the saved device description
-   */
-  handleDeviceSaved(deviceId, device) {
-    console.log('MyQAdapter:', this.name, 'id', this.id,
-                'handleDeviceSaved(', device.id, ')');
-
-    // this.devices[device.id].poll() // Start polling
   }
 }
 
