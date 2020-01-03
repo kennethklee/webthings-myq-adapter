@@ -10,7 +10,8 @@ class MyQAdapter extends Adapter {
   constructor(addonManager, config, manifest) {
     super(addonManager, manifest.id, manifest.name)
 
-    this.myq = new MyQ(config.username, config.password)
+    this.myq = new MyQ(config.email, config.password)
+    console.log(config)
     this.pollInterval = config.pollInterval
 
     addonManager.addAdapter(this)
@@ -25,7 +26,8 @@ class MyQAdapter extends Adapter {
     console.log('MyQAdapter:', this.name, 'id', this.id, 'pairing started')
 
     if (!this.myq.securityToken) {
-      await this.myq.login()
+      let loginResult = await this.myq.login()
+      loginResult.returnCode && console.error(loginResult.message)
     }
 
     let {devices} = this.myq.getDevices([7, 17]) // Retrieve garage doors
@@ -81,7 +83,7 @@ class MyQAdapter extends Adapter {
     console.log('MyQAdapter:', this.name, 'id', this.id,
                 'handleDeviceSaved(', device.id, ')');
 
-    this.devices[device.id].poll() // Start polling
+    // this.devices[device.id].poll() // Start polling
   }
 }
 

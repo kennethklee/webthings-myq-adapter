@@ -1,29 +1,47 @@
 {
-    "author": "Kenneth Lee",
-    "content_scripts": [
-      {
-        "css": [
-          "css/extension.css"
-        ],
-        "js": [
-          "js/extension.js"
-        ]
-      }
-    ],
-    "description": "MyQ adapter add-on for Mozilla WebThings Gateway",
-    "gateway_specific_settings": {
-      "webthings": {
-        "exec": "{nodeLoader} {path}",
-        "primary_type": "adapter",
-        "strict_max_version": "*",
-        "strict_min_version": "0.10.0"
-      }
+  "author": "Kenneth Lee",
+  "description": "MyQ adapter add-on for Mozilla WebThings Gateway",
+  "gateway_specific_settings": {
+    "webthings": {
+      "exec": "{nodeLoader} {path}",
+      "primary_type": "adapter",
+      "strict_max_version": "*",
+      "strict_min_version": "0.10.0"
+    }
+  },
+  "homepage_url": "https://github.com/kennethklee/webthings-myq-adapter",
+  "id": "myq-adapter",
+  "manifest_version": 1,
+  "name": "MyQ Adapter",
+  "short_name": "MyQ",
+  "version": "0.0.0",
+  "license": "MPL-2.0",
+  "options": {
+    "default": {
+      "pollInterval": 5
     },
-    "homepage_url": "https://github.com/mozilla-iot/example-adapter",
-    "id": "myq-adapter",
-    "manifest_version": 1,
-    "name": "MyQ Adapter",
-    "short_name": "MyQ",
-    "version": "0.0.0",
-    "license": "MPL-2.0"
+    "schema": {
+      "type": "object",
+      "required": [
+        "pollInterval",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "pollInterval": {
+          "description": "Interval in minutes at which to poll MyQ",
+          "type": "integer",
+          "minimum": 1
+        },
+        "email": {
+          "description": "MyQ account email",
+          "type": "string"
+        },
+        "password": {
+          "description": "MyQ account email",
+          "type": "string"
+        }
+      }
+    }
   }
+}
