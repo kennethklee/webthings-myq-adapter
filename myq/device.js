@@ -49,14 +49,14 @@ class MyQDevice extends Device {
   }
 
   async poll() {
-    this._pollSchedule = setTimeout(() => this.poll(), this.adapter.pollInterval)
+    this._pollSchedule = setTimeout(() => this.poll(), this.adapter.pollInterval * 60 * 1000)
 
     let resp = await this.adapter.myq.getDoorState(this.id)
     let newValue = resp.doorState === 1
 
-    if (this.properties.door.value !== newValue) {
-      this.properties.door.set_cached_value(newValue)
-      this.notify_property_changed(this.properties.door)
+    if (this.properties.open.value !== newValue) {
+      this.properties.open.set_cached_value(newValue)
+      this.notify_property_changed(this.properties.open)
     }
   }
 
