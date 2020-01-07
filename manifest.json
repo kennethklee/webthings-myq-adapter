@@ -14,7 +14,7 @@
   "manifest_version": 1,
   "name": "MyQ Adapter",
   "short_name": "MyQ",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "license": "MPL-2.0",
   "options": {
     "default": {
