@@ -4,21 +4,19 @@ const {
 } = require('gateway-addon')
 
 const PROPERTY_DEFINITIONS = {
-  // online: {
-  //   title: 'On/Off',
-  //   type: 'boolean',
-  //   '@type': 'OnOffProperty',
-  // },
   open: {
     title: 'Door',
     type: 'boolean',
     '@type': 'DoorProperty'
-  },
-  // state: {
-  //   title: 'State',
-  //   type: 'string',
-  //   enum: ['open', 'closed', 'stopped in the middle', 'going up', 'going down', 'not closed']
-  // }
+  }
+}
+
+const ABORT_RETRY = 2
+
+function wait(milliseconds) {
+  return new Promise((resolve, reject) => {
+    setTimeout(function() {resolve()}, milliseconds)
+  })
 }
 
 class MyQDevice extends Device {
@@ -34,35 +32,63 @@ class MyQDevice extends Device {
     doorProperty.setCachedValue(host.doorState === 1)
     this.properties.set('open', doorProperty)
 
+    this.retry = 0
     this.poll()
   }
 
-  async notifyPropertyChanged(property) {
+  notifyPropertyChanged(property) {
+    super.notifyPropertyChanged(property)
     switch (property.name) {
       case 'open':
-        console.log('Setting door state to', property.value ? 1 : 2)
-        await this.adapter.myq.setDoorState(this.id, property.value ? 1 : 2)
+        this.toggle(property.value)
         break
     }
-
-    super.notifyPropertyChanged(property)
   }
 
   async poll() {
     this._pollSchedule = setTimeout(() => this.poll(), this.adapter.pollInterval * 60 * 1000)
 
     let resp = await this.adapter.myq.getDoorState(this.id)
+    if (resp.returnCode) {
+      console.error('Abort:', resp.message)
+      return this.cancelPoll()
+    }
+    console.log(this.name, 'reports', resp.doorStateDescription)
+    
     let newValue = resp.doorState === 1
 
     let doorProp = this.properties.get('open')
     if (doorProp.value !== newValue) {
       doorProp.setCachedValue(newValue)
-      this.notifyPropertyChanged(doorProp)
+      this.notifyPropertyChanged(doorProp)     
     }
   }
 
   async cancelPoll() {
     clearTimeout(this._pollSchedule)
+  }
+
+  async toggle(isOpen) {
+    if (isOpen === undefined) {
+      isOpen = !this.properties.get('open').value
+    }
+
+    let resp = await this.adapter.myq.setDoorState(this.id, isOpen ? 1 : 0)
+    
+    if (resp.returnCode === 13) {
+      this.retry++
+      if (this.retry > ABORT_RETRY) {
+        console.warn('Failed to login. Aborting.')
+        return
+      }
+      console.warn('MyQ unauthorized, logging in and trying again in 1 second.')
+      await wait(1000)
+      await this.adapter.login()
+      return this.toggle(isOpen)
+    } else {
+      console.log(this.name, isOpen ? 'opening' : 'closing')
+      this.retry = 0    // reset retry
+    }
   }
 }
 module.exports = MyQDevice
