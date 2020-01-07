@@ -5,9 +5,10 @@ const {
 
 const PROPERTY_DEFINITIONS = {
   open: {
-    title: 'Door',
+    title: 'Open',
     type: 'boolean',
-    '@type': 'DoorProperty'
+    '@type': 'OpenProperty',
+    readOnly: true,
   }
 }
 
@@ -25,42 +26,48 @@ class MyQDevice extends Device {
 
     this.id = host.id
     this.name = host.name
-    this.type = host.typeName
     this['@type'] = ['DoorSensor']
 
-    let doorProperty = new Property(this, 'open', PROPERTY_DEFINITIONS.open)
-    doorProperty.setCachedValue(host.doorState === 1)
-    this.properties.set('open', doorProperty)
+    const openProperty = new Property(this, 'open', PROPERTY_DEFINITIONS.open)
+    openProperty.setCachedValue(host.doorState === 1)
+    this.properties.set('open', openProperty)
+
+    this.addAction(
+      'open',
+      {
+        title: 'Open',
+        description: 'Open the door',
+      }
+    )
+
+    this.addAction(
+      'close',
+      {
+        title: 'Close',
+        description: 'Close the door',
+      }
+    )
 
     this.retry = 0
     this.poll()
   }
 
-  notifyPropertyChanged(property) {
-    super.notifyPropertyChanged(property)
-    switch (property.name) {
-      case 'open':
-        this.toggle(property.value)
-        break
-    }
-  }
-
   async poll() {
     this._pollSchedule = setTimeout(() => this.poll(), this.adapter.pollInterval * 60 * 1000)
 
-    let resp = await this.adapter.myq.getDoorState(this.id)
+    const resp = await this.adapter.myq.getDoorState(this.id)
     if (resp.returnCode) {
       console.error('Abort:', resp.message)
       return this.cancelPoll()
     }
     console.log(this.name, 'reports', resp.doorStateDescription)
     
-    let newValue = resp.doorState === 1
+    const newValue = resp.doorState === 1
 
-    let doorProp = this.properties.get('open')
-    if (doorProp.value !== newValue) {
-      doorProp.setCachedValue(newValue)
-      this.notifyPropertyChanged(doorProp)     
+    const openProp = this.properties.get('open')
+    if (openProp.value !== newValue) {
+      openProp.setCachedValue(newValue)
+      this.notifyPropertyChanged(openProp)     
     }
   }
 
@@ -68,12 +75,27 @@ class MyQDevice extends Device {
     clearTimeout(this._pollSchedule)
   }
 
+  async performAction(action) {
+    action.start()
+
+    switch (action.name) {
+      case 'open':
+        await this.toggle(true)
+        break
+      case 'close':
+        await this.toggle(false)
+        break
+    }
+
+    action.finish()
+  }
+
   async toggle(isOpen) {
-    if (isOpen === undefined) {
+    if (typeof isOpen === 'undefined') {
       isOpen = !this.properties.get('open').value
     }
 
-    let resp = await this.adapter.myq.setDoorState(this.id, isOpen ? 1 : 0)
+    const resp = await this.adapter.myq.setDoorState(this.id, isOpen ? 1 : 0)
     
     if (resp.returnCode === 13) {
       this.retry++
@@ -91,4 +113,5 @@ class MyQDevice extends Device {
     }
   }
 }
+
 module.exports = MyQDevice
