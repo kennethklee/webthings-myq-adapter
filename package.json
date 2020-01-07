@@ -1,6 +1,6 @@
 {
   "name": "myq-adapter",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "MyQ adapter add-on for Mozilla WebThings Gateway",
   "main": "index.js",
   "scripts": {
