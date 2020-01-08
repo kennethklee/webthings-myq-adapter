@@ -2,8 +2,8 @@ const {
   Adapter
 } = require('gateway-addon')
 
-let MyQ = require('myq-api')
-let MyQDevice = require('./device')
+const MyQ = require('myq-api')
+const MyQDevice = require('./device')
 
 
 class MyQAdapter extends Adapter {
@@ -40,7 +40,7 @@ class MyQAdapter extends Adapter {
   async startPairing(_timeoutSeconds) {
     console.log('MyQAdapter:', this.name, 'id', this.id, 'pairing started')
     
-    let result = await this.myq.getDevices([7, 17])
+    const result = await this.myq.getDevices([7, 17])
     if (result.returnCode) {
       throw new Error(result.message)
     }
@@ -59,7 +59,7 @@ class MyQAdapter extends Adapter {
     console.log('MyQAdapter:', this.name, 'id', this.id,
                 'removeThing(', device.id, ') started');
 
-    const device = this.devices[deviceId]
+    device = this.devices[deviceId]
     if (device) {
       device.stopPolling()
       this.handleDeviceRemoved(device)

@@ -1,5 +1,6 @@
 {
   "name": "myq-adapter",
+  "display_name": "MyQ",
   "version": "0.1.0",
   "description": "MyQ adapter add-on for Mozilla WebThings Gateway",
   "main": "index.js",
@@ -19,6 +20,16 @@
   "dependencies": {
     "myq-api": "0.0.2"
   },
+  "files": [
+    "LICENSE",
+    "SHA256SUMS",
+    "index.js",
+    "manifest.json",
+    "myq/adapter.js",
+    "myq/device.js",
+    "myq/index.js",
+    "node_modules"
+  ],
   "moziot": {
     "api": {
       "min": 2,

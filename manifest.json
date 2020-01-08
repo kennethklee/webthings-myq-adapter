@@ -12,7 +12,7 @@
   "homepage_url": "https://github.com/kennethklee/webthings-myq-adapter",
   "id": "myq-adapter",
   "manifest_version": 1,
-  "name": "MyQ Adapter",
+  "name": "MyQ",
   "short_name": "MyQ",
   "version": "0.1.0",
   "license": "MPL-2.0",
