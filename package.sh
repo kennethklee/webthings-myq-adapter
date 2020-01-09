@@ -10,6 +10,6 @@ TARFILE=$(npm pack)
 tar xzf ${TARFILE}
 cp -r node_modules ./package
 tar czf ${TARFILE} package
-rm -rf package
+# rm -rf package
 sha256sum ${TARFILE}
 echo "Created ${TARFILE}"
