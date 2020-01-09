@@ -9,7 +9,7 @@
       "strict_min_version": "0.10.0"
     }
   },
-  "homepage_url": "https://github.com/kennethklee/webthings-myq-adapter",
+  "homepage_url": "https://github.com/kennethklee/webthings-myq-adapter#readme",
   "id": "myq-adapter",
   "manifest_version": 1,
   "name": "MyQ",

@@ -17,7 +17,7 @@
   "bugs": {
     "url": "https://github.com/kennethklee/webthings-myq-adapter/issues"
   },
-  "license": "LGPL",
+  "license": "MPL-2.0",
   "homepage": "https://github.com/kennethklee/webthings-myq-adapter#readme",
   "dependencies": {
     "myq-api": "0.0.2"
