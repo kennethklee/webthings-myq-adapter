@@ -57,8 +57,8 @@ class MyQDevice extends Device {
 
     const resp = await this.adapter.myq.getDoorState(this.id)
     if (resp.returnCode) {
-      console.error('Abort:', resp.message)
-      return this.cancelPoll()
+      console.error(this.name, 'Abort:', resp.message)
+      return
     }
     console.log(this.name, 'reports', resp.doorStateDescription)
     
@@ -100,10 +100,10 @@ class MyQDevice extends Device {
     if (resp.returnCode === 13) {
       this.retry++
       if (this.retry > ABORT_RETRY) {
-        console.warn('Failed to login. Aborting.')
+        console.error(this.name, 'Failed to login. Aborting.')
         return
       }
-      console.warn('MyQ unauthorized, logging in and trying again in 1 second.')
+      console.warn(this.name, 'Unauthorized, logging in and trying again in 1 second.')
       await wait(1000)
       await this.adapter.login()
       return this.toggle(isOpen)

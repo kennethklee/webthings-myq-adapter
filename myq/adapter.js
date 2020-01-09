@@ -63,9 +63,9 @@ class MyQAdapter extends Adapter {
     if (myQDevice) {
       myQDevice.cancelPoll()
       this.handleDeviceRemoved(myQDevice)
-      console.log(this.name, 'device', device.id, ' was removed')
+      console.log(this.name, 'device', device.id, 'removed')
     } else {
-      console.error(this.name, 'device ', device.id, ' not found for removal')
+      console.error(this.name, 'device ', device.id, 'not found for removal')
     }
   }
 }
