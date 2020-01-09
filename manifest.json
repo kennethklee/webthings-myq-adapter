@@ -38,7 +38,7 @@
           "type": "string"
         },
         "password": {
-          "description": "MyQ account email",
+          "description": "MyQ account password",
           "type": "string"
         }
       }

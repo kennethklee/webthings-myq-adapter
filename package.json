@@ -61,9 +61,8 @@
           "type": "string"
         },
         "password": {
-          "description": "MyQ account email",
-          "type": "string",
-          "format": "password"
+          "description": "MyQ account password",
+          "type": "string"
         }
       }
     }
