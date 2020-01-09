@@ -38,7 +38,7 @@ class MyQAdapter extends Adapter {
    * @param {Number} timeoutSeconds Number of seconds to run before timeout
    */
   async startPairing(_timeoutSeconds) {
-    console.log('MyQAdapter:', this.name, 'id', this.id, 'pairing started')
+    console.log(this.name, 'pairing started')
     
     const result = await this.myq.getDevices([7, 17])
     if (result.returnCode) {
@@ -48,6 +48,7 @@ class MyQAdapter extends Adapter {
     result.devices.forEach(device => {
       this.handleDeviceAdded(new MyQDevice(this, device))
     })
+    console.log(this.name, 'paired', result.devices.length, 'devices')
   }
 
   /**
@@ -56,16 +57,15 @@ class MyQAdapter extends Adapter {
    * @param {Object} device Device to unpair with
    */
   removeThing(device) {
-    console.log('MyQAdapter:', this.name, 'id', this.id,
-                'removeThing(', device.id, ') started');
+    console.log(this.name, 'removeThing(', device.id, ') started')
 
-    device = this.devices[deviceId]
-    if (device) {
-      device.stopPolling()
-      this.handleDeviceRemoved(device)
-      console.log('MyQAdapter: device, ', device.id, ', was unpaired.')
+    const myQDevice = this.devices[device.id]
+    if (myQDevice) {
+      myQDevice.cancelPoll()
+      this.handleDeviceRemoved(myQDevice)
+      console.log(this.name, 'device', device.id, ' was removed')
     } else {
-      console.error('MyQAdapter: device, ', device.id, ', not found.')
+      console.error(this.name, 'device ', device.id, ' not found for removal')
     }
   }
 }
