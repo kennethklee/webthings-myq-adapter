@@ -2,7 +2,7 @@
   "name": "myq-adapter",
   "display_name": "MyQ",
   "version": "0.1.2",
-  "description": "MyQ adapter add-on for Mozilla WebThings Gateway",
+  "description": "MyQ adapter add-on for WebThings Gateway",
   "main": "index.js",
   "scripts": {
     "clean": "rm *.tgz | true",
@@ -31,40 +31,5 @@
     "myq/device.js",
     "myq/index.js",
     "node_modules"
-  ],
-  "moziot": {
-    "api": {
-      "min": 2,
-      "max": 2
-    },
-    "type": "adapter",
-    "plugin": true,
-    "exec": "{nodeLoader} {path}",
-    "config": {
-      "pollInterval": 5
-    },
-    "schema": {
-      "type": "object",
-      "required": [
-        "pollInterval",
-        "email",
-        "password"
-      ],
-      "properties": {
-        "pollInterval": {
-          "description": "Interval in minutes at which to poll MyQ",
-          "type": "integer",
-          "minimum": 1
-        },
-        "email": {
-          "description": "MyQ account email",
-          "type": "string"
-        },
-        "password": {
-          "description": "MyQ account password",
-          "type": "string"
-        }
-      }
-    }
-  }
+  ]
 }
