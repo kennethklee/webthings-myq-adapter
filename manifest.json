@@ -1,6 +1,6 @@
 {
   "author": "Kenneth Lee",
-  "description": "MyQ adapter add-on for Mozilla WebThings Gateway",
+  "description": "MyQ adapter add-on for WebThings Gateway",
   "gateway_specific_settings": {
     "webthings": {
       "exec": "{nodeLoader} {path}",
